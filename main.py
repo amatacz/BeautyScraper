@@ -11,6 +11,11 @@ INCI_DICT = {}
 
 
 def get_driver(url):
+    """
+    Takes URL string as an argument, connects to page using Chrome,
+    accepts cookies and retrun Selenium web response.
+    """
+
     driver = webdriver.Chrome()
     driver.get(url)
 
@@ -26,6 +31,12 @@ def get_driver(url):
 
 
 def get_ingredients_links(response):
+    """
+    Takes selenium response as an argument.
+    Find all elements that represents ingredients 
+    and extract links to detailed view.
+    Stores links in list.
+    """
 
     ingredients = WebDriverWait(response, 10).until(
         exp.presence_of_all_elements_located((
@@ -38,6 +49,18 @@ def get_ingredients_links(response):
 
 
 def get_ingredient_functions(ingredient_links: list):
+    """
+    Takes list of links to ingredient details view.
+    Extracts ingredient name and functions in cosmetics.
+    Stores info in INCI_DICT in format:
+    ingredient_name {
+        [
+            {function_category: function},
+            {function_category: function}
+        ]
+    }
+    """
+
     for link in ingredient_links:
         response = get_driver(link)
         ingredient_name = WebDriverWait(response, 10).until(
@@ -80,6 +103,9 @@ def get_ingredient_functions(ingredient_links: list):
 
 
 def save_inci_data_to_json(inci_data):
+    """
+    Saves INCI_DICT to JSON file.
+    """
     with open("inci_data.json", "w") as f:
         json.dump(inci_data, f, indent=2)
 

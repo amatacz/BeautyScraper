@@ -3,10 +3,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as exp
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-import string
 
-ALPHABET = list(string.ascii_uppercase)
-PAGE_LITERALS = ['1'] + ALPHABET
+
+
 
 
 class INCIScraper:
@@ -38,6 +37,9 @@ class INCIScraper:
         return ingredient_links
 
     def get_ingredients_functions(self, ingredients_links):
+        """
+        Komentarze
+        """
         inci_dict = {}
 
         for link in ingredients_links:

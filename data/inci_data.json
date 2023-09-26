@@ -1,0 +1,75 @@
+{
+  "1,2,4-TRIHYDROXYBENZENE": {
+    "Functions": {
+      "Hair dyeing": "Colors the hair"
+    }
+  },
+  "1,2-DIMETHOXY-4-(2-PROPENYL)-BENZENE": {
+    "Functions": []
+  },
+  "1,2-HEXANEDIOL": {
+    "Functions": {
+      "Skin conditioning": "Maintains skin in good condition",
+      "Solvent": "Dissolves other substances"
+    }
+  },
+  "ABIES ALBA CONE EXTRACT": {
+    "Functions": {
+      "Perfuming": "Used for perfume and aromatic raw materials"
+    }
+  },
+  "ABIES ALBA CONE OIL": {
+    "Functions": {
+      "Perfuming": "Used for perfume and aromatic raw materials"
+    }
+  },
+  "ABIES ALBA LEAF CERA": {
+    "Functions": {
+      "Skin conditioning": "Maintains skin in good condition",
+      "Skin protecting": "Helps to avoid the harmful effects of external factors on the skin",
+      "Perfuming": "Used for perfume and aromatic raw materials"
+    }
+  },
+  "BABASSUAMIDOPROPYL BETAINE": {
+    "Functions": {
+      "Antistatic": "Reduces static electricity by neutralizing electrical charge on a surface",
+      "Cleansing": "Helps to keep a clean surface",
+      "Foam boosting": "Improves the quality of the foam produced by increasing one or more of the following properties: volume, texture and/or stability",
+      "Hair conditioning": "Leaves hair easy to comb, soft, soft and shiny and / or confers volume, lightness and shine",
+      "Skin conditioning": "Maintains skin in good condition",
+      "Surfactant": "Reduces the surface tension of cosmetics and contributes to the even distribution of the product when it is used",
+      "Viscosity controlling": "Increases or decreases the viscosity of cosmetics"
+    }
+  },
+  "BALANITES AEGYPTIACA KERNEL OIL": {
+    "Functions": {
+      "Skin conditioning": "Maintains skin in good condition"
+    }
+  },
+  "BALANITES ROXBURGHII SEED OIL": {
+    "Functions": {
+      "Skin conditioning": "Maintains skin in good condition"
+    }
+  },
+  "C12-15 ALKYL BENZOATE": {
+    "Functions": {
+      "Antimicrobial": "Helps slowing the growth of micro-organisms on the skin and counteracts the development of microbes",
+      "Emollient": "Softens and smoothes the skin",
+      "Skin conditioning": "Maintains skin in good condition"
+    }
+  },
+  "C12-16 ALCOHOLS": {
+    "Functions": {
+      "Antistatic": "Reduces static electricity by neutralizing electrical charge on a surface",
+      "Emollient": "Softens and smoothes the skin",
+      "Emulsion stabilising": "Promotes the emulsification process and improves the stability and shelf life of the emulsion",
+      "Hair conditioning": "Leaves hair easy to comb, soft, soft and shiny and / or confers volume, lightness and shine",
+      "Viscosity controlling": "Increases or decreases the viscosity of cosmetics"
+    }
+  },
+  "C13-15 ALKANE": {
+    "Functions": {
+      "Solvent": "Dissolves other substances"
+    }
+  }
+}

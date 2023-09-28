@@ -55,6 +55,10 @@ class INCIScraper:
             print(f"An unexpected error occured. Error: {e}.")
 
     def get_ingredients_links(self):
+        """
+        Gets links to each ingredients from provided path and section.
+            Returns None if no data found.
+        """
         # Attempt to retrieve a list of elements by their class name
         ingredients = self.get_list_of_elements(By.CLASS_NAME, 'color-inherit')
 
@@ -83,7 +87,7 @@ class INCIScraper:
         function_categories = self.get_list_of_elements(By.CLASS_NAME, 'fonctions-inci')
 
         if function_categories is None:
-            return []
+            return {}
 
         ingredient_functions = [function_category.text.split("\n") for function_category in function_categories]
         function_details = [ingredient_function.split(" : ") for ingredient_function in ingredient_functions[0]]
@@ -110,16 +114,25 @@ class INCIScraper:
             return None
 
     def get_inci_data(self, ingredients_links):
+        """
+        Iterates by ingredients links and saves ingredients data
+        (name and functions) to dict.
+
+        :params ingredients_links: list of ingredients links (urls)
+
+        """
         inci_info = {}
 
         for link in ingredients_links:
             try:
+                # Open website of specific ingredient
                 self.open_website(link)
-                inci_info[self.get_ingredient_name()] = {
-                    'Functions': self.get_ingredient_functions()
+                inci_info[self.get_ingredient_name()] = { 
+                    'Functions': self.get_ingredient_functions()  # Get ingredient functions
                 }
             except Exception as e:
                 print('Error during data exploration... \n', e)
                 continue
 
+        # Return data
         return inci_info

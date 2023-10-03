@@ -1,3 +1,7 @@
+datasource:
+  - name: BASE-URL
+  - url: https://www.sephora.pl/wszystkie-produkty/pielegnacja-twarzy/kosmetyki-do-pielegnacji/
+
 category:
   - name: day-cream
     url: kremy-na-dzien-c299901

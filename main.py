@@ -15,21 +15,29 @@ if __name__ == '__main__':
     # create cloud integrator project
     CloudIntegratorObject = cloud_integration.CloudIntegration()
 
+    # create scraper object
+    INCIScraperObject = inci_scrapper.INCIScraper()
+
+    # create sephora scraper
+    SephoraScraperObject = sephora_scrapper.ProductsScraper()
+
     # inci_data placeholder
     all_inci_data = {}
-    for page_literal in inci_scrapper.PAGE_LITERALS:
-        try:
-            inci_db = inci_scrapper.INCIScraper()
-            inci_db.open_website(f'https://incibeauty.com/en/ingredients/{page_literal}')
-            inci_db.accept_cookies()
-            links = inci_db.get_ingredients_links()
-            all_inci_data.update(inci_db.get_ingredients_functions(links))
-        except Exception as e:
-            print(e)
-            all_inci_data.update({page_literal: "BRAK DANYCH"})
 
-        finally:
-            inci_db.close_browser()
+    # scrape data from each inci category
+    for literal in DataConfiguratorObject.PAGE_LITERALS:
+        # opens url with inci category
+        INCIScraperObject.open_website(DataConfiguratorObject.inci_url+literal)
+        # accepts cookies
+        INCIScraperObject.accept_cookies()
+        # scrape links for all category ingredients
+        ingredients_links = INCIScraperObject.get_ingredients_links()
+        # update dictionary placeholder with actual data
+        all_inci_data.update(INCIScraperObject.get_inci_data(ingredients_links))
+
+    # helper, will be removed
+    with open("data\\inci_data.json", "w", encoding="utf-8") as f:
+        json.dump(all_inci_data, f, indent=2)
 
     # upload dict data to GCP bucket
     CloudIntegratorObject.upload_data_to_cloud_from_dict("amatacz-skincare-project-bucket", all_inci_data, "inci_dictionary.json")
@@ -39,12 +47,16 @@ if __name__ == '__main__':
 
         # data placeholder
         category_data = {}
-
-        category_info = sephora_scrapper.ProductsScraper()
-        category_info.open_website(sephora_scrapper.BASE_URL + category['url'] + sephora_scrapper.QUERY_PARAMS)
-        category_info.decline_cookies()
-        category_info_links = category_info.get_product_tiles()
-        category_data.update(category_info.get_product_data(category_info_links))
+        # destination url for data per each category ad with specified rating - 5/5 by default
+        destination_url = SephoraScraperObject.SEPHORA_BASE_URL + category['url'] + SephoraScraperObject.get_rating_filter()
+        # Opening a website
+        SephoraScraperObject.open_website(destination_url)
+        # Decline cookies if any
+        SephoraScraperObject.decline_cookies()
+        # Scrape links to specific products
+        category_info_links = SephoraScraperObject.get_product_tiles()
+        # Update dictionary placeholder with actual data
+        category_data.update(SephoraScraperObject.get_product_data(category_info_links))
 
         # helper, will be removed
         with open(f"data\\{category['name']}_data.json", "w", encoding="utf-8") as f:

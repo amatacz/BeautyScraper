@@ -16,7 +16,7 @@ def gcloud_get_inci_data(request, context=None):
     all_inci_data = {}
 
     # scrape data from each inci category
-    for literal in DataConfiguratorObject.PAGE_LITERALS[0]:
+    for literal in DataConfiguratorObject.PAGE_LITERALS:
         # opens url with inci category
         INCIScraperObject.open_website(DataConfiguratorObject.inci_url+literal)
         # accepts cookies
@@ -25,7 +25,6 @@ def gcloud_get_inci_data(request, context=None):
         ingredients_links = INCIScraperObject.get_ingredients_links()
         # update dictionary placeholder with actual data
         all_inci_data.update(INCIScraperObject.get_inci_data(ingredients_links))
-        print("Elo!")
 
     # # upload dict data to GCP bucket
     # CloudIntegratorObject.upload_data_to_cloud_from_dict("amatacz-skincare-project-bucket", all_inci_data, "inci_dictionary.json")

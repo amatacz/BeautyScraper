@@ -1,11 +1,12 @@
 import yaml
 import string
+import os
 
 
 class DataConfigurator:
 
     def __init__(self) -> None:
-        self.category_urls_yaml = 'conf/category_urls.yaml'
+        self.category_urls_yaml = os.path.join(os.path.dirname(__file__), 'conf/category_urls.yaml')
         self.inci_url = 'https://incibeauty.com/en/ingredients/'
         self.ALPHABET = list(string.ascii_uppercase)
         self.PAGE_LITERALS = ['1'] + self.ALPHABET

@@ -1,24 +1,28 @@
 import os
 from dotenv import load_dotenv
-from google.cloud import storage
+from google.cloud import storage, bigquery, secretmanager
 import json
 
 
 class CloudIntegration:
 
     def __init__(self) -> None:
-        load_dotenv('secrets/.env')
-        self.cloud_key = os.environ['GCLOUD_JSON_KEY_LOCATION']
+        self.cloud_key = None
         self.project_id = None
 
-        ''' Retrieve project id from .json key file for google cloud project '''
-        if os.path.exists(self.cloud_key):
-            # open json file
-            with open(self.cloud_key, 'r') as file:
-                try:
-                    self.project_id = json.load(file).get('project_id', None)
-                except json.JSONDecodeError:
-                    pass
+    def get_secret(self, project_id, secret_id, version_id="latest"):
+        """
+        Return a secret value from gcloud secret instance.
+        """
+        # Create the Secret Manager Service Client
+        client = secretmanager.SecretManagerServiceClient()
+        # Build the resource name of the secret version.
+        name = f"projects/{project_id}/secrets/{secret_id}/version/{version_id}"
+        # Access the secret version
+        response = client.access_secret_version(request={"name": name})
+
+        # Return the decoded payload
+        return response.payload.data.decode("UTF-8")
 
     def get_google_cloud_project_id(self) -> str:
         ''' return cloud project id '''
@@ -32,7 +36,7 @@ class CloudIntegration:
             return None  # if there is no api key provided
 
     def upload_data_to_cloud_from_file(self, bucket_name, data_to_upload, blob_name):
-        ''' Uloads files with daa to GCP buckets. '''
+        ''' Uloads files with data to GCP buckets. '''
         bucket = self._get_google_client().bucket(bucket_name)  # connect to bucket
         blob = bucket.blob(blob_name)  # create blob
         with open(data_to_upload, "rb") as file:

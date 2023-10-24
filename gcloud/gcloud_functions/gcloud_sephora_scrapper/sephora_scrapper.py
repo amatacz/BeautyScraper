@@ -3,8 +3,10 @@ from selenium.webdriver.support import expected_conditions as exp
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementClickInterceptedException, ElementNotInteractableException, WebDriverException
-from src.data_configuration import DataConfigurator
+from selenium.common.exceptions import NoSuchElementException, \
+    TimeoutException, ElementClickInterceptedException, \
+    ElementNotInteractableException, WebDriverException
+from ..utils import DataConfigurator
 import time
 
 
@@ -189,7 +191,7 @@ class ProductsScraper:
         except Exception as e:
             print("Error occured: ", e)
             return None
-        
+
     def get_product_ingredients(self):
         """
         Retrieves the product ingredients from the web page.

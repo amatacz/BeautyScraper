@@ -2,3 +2,4 @@ env/
 secrets/
 skincare-project.json
 .env
+__pycache__/

@@ -5,7 +5,7 @@ from utils import DataConfigurator
 
 
 @functions_framework.http
-def gcloud_get_inci_data(request, context=None):
+def gcloud_get_inci_data_to_m(request, context=None):
     # create data configurator object
     DataConfiguratorObject = DataConfigurator()
 
@@ -16,7 +16,7 @@ def gcloud_get_inci_data(request, context=None):
     all_inci_data = {}
 
     # scrape data from each inci category
-    for literal in DataConfiguratorObject.PAGE_LITERALS:
+    for literal in DataConfiguratorObject.PAGE_LITERALS[:14]:
         # opens url with inci category
         INCIScraperObject.open_website(DataConfiguratorObject.inci_url+literal)
         # accepts cookies
@@ -30,6 +30,32 @@ def gcloud_get_inci_data(request, context=None):
     # CloudIntegratorObject.upload_data_to_cloud_from_dict("amatacz-skincare-project-bucket", all_inci_data, "inci_dictionary.json")
     return all_inci_data
 
+
+@functions_framework.http
+def gcloud_get_inci_data_from_n(request, context=None):
+    # create data configurator object
+    DataConfiguratorObject = DataConfigurator()
+
+    # create scraper object
+    INCIScraperObject = INCIScraper()
+
+    # inci_data placeholder
+    all_inci_data = {}
+
+    # scrape data from each inci category
+    for literal in DataConfiguratorObject.PAGE_LITERALS[14:]:
+        # opens url with inci category
+        INCIScraperObject.open_website(DataConfiguratorObject.inci_url+literal)
+        # accepts cookies
+        INCIScraperObject.accept_cookies()
+        # scrape links for all category ingredients
+        ingredients_links = INCIScraperObject.get_ingredients_links()
+        # update dictionary placeholder with actual data
+        all_inci_data.update(INCIScraperObject.get_inci_data(ingredients_links))
+
+    # # upload dict data to GCP bucket
+    # CloudIntegratorObject.upload_data_to_cloud_from_dict("amatacz-skincare-project-bucket", all_inci_data, "inci_dictionary.json")
+    return all_inci_data
 
 @functions_framework.http
 def gcloud_get_product_data(request, context=None):

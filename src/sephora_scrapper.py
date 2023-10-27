@@ -3,8 +3,10 @@ from selenium.webdriver.support import expected_conditions as exp
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementClickInterceptedException, ElementNotInteractableException, WebDriverException
-from src.data_configuration import DataConfigurator
+from selenium.common.exceptions import NoSuchElementException, \
+    TimeoutException, ElementClickInterceptedException, \
+    ElementNotInteractableException, WebDriverException
+from utils import DataConfigurator
 import time
 
 
@@ -12,13 +14,14 @@ class ProductsScraper:
     def __init__(self) -> None:
         options = Options()
         # options.add_experimental_option("detach", True)
+        options.add_argument("--start-maximized")
         self.driver = webdriver.Chrome(options=options)
 
         # define XPath contants
         self.BRAND_XPATH = '//*[@id="pdpMain"]/div[1]/div[2]/div[2]/div[1]/div[1]'
         self.PRODUCT_NAME_XPATH = '//*[@id="pdpMain"]/div[1]/div[2]/div[2]/div[1]/h1/span'
-        self.PRODUCT_PRICE_XPATH = '//*[@id="price-block"]/div[1]/span'
-        self.PAYMENT_SEC_XPATH = '//*[@id="delivery-availability-section"]'
+        self.PRODUCT_PRICE_XPATH = '//*[@id="product-content"]/div[2]/div/div[1]/span'
+        self.DELIVERY_SEC_XPATH = '//*[@id="delivery-availability-section"]'
         self.PRODUCT_INCI_SECTION_ID = 'tab-ingredients'
         self.PRODUCT_INCI_XPATH = '//*[@id="product-info"]/div'
         # Define IDs contstants
@@ -84,7 +87,7 @@ class ProductsScraper:
         # current time
         start_time = time.time()
         # current height
-        last_height = self.driver.execute("return document.body.scrollHeight")
+        last_height = self.driver.execute_script("return document.body.scrollHeight")
         try:
             while True:
                 # Scroll down to bottom
@@ -127,7 +130,7 @@ class ProductsScraper:
         self._scroll_to_bottom()
 
         # Attempt to retrieve a list of elements by their class name
-        product_tile_links = self.get_list_of_elements(By.CLASS_NAME, "product-tile_link")
+        product_tile_links = self.get_list_of_elements(By.CLASS_NAME, "product-tile-link")
 
         # Check if any product tile links are found.
         if product_tile_links is None:
@@ -143,7 +146,7 @@ class ProductsScraper:
             If no element found return None.
         """
         try:
-            return WebDriverException(self.driver, 10).until(exp.presence_of_all_elements_located((by, value)))
+            return WebDriverWait(self.driver, 10).until(exp.presence_of_all_elements_located((by, value)))
         except (NoSuchElementException, TimeoutException) as e:
             return None
 
@@ -153,7 +156,7 @@ class ProductsScraper:
             If no element found return None.
         """
         try:
-            return WebDriverException(self.driver, 10).until(exp.presence_of_element_located((by, value)))
+            return WebDriverWait(self.driver, 10).until(exp.presence_of_element_located((by, value)))
         except (NoSuchElementException, TimeoutException) as e:
             return None
 
@@ -166,7 +169,8 @@ class ProductsScraper:
             return self.get_element_text(By.XPATH, self.BRAND_XPATH).text
         except Exception as e:
             print("Error occured: ", e)
-            return None
+            return "BRAK DANYCH"
+            # return None
 
     def get_product_name(self):
         """
@@ -177,7 +181,8 @@ class ProductsScraper:
             return self.get_element_text(By.XPATH, self.PRODUCT_NAME_XPATH).text
         except Exception as e:
             print("Error occured: ", e)
-            return None
+            return "BRAK DANYCH"
+            # return None
 
     def get_product_price(self):
         """
@@ -188,8 +193,10 @@ class ProductsScraper:
             return self.get_element_text(By.XPATH, self.PRODUCT_PRICE_XPATH).text
         except Exception as e:
             print("Error occured: ", e)
-            return None
-        
+            return "BRAK DANYCH"
+            # return None
+
+
     def get_product_ingredients(self):
         """
         Retrieves the product ingredients from the web page.
@@ -203,12 +210,16 @@ class ProductsScraper:
             TimeoutException: If the element does not reach the desired state within the timeout.
         """
         try:
+            # Scroll down to inci section details be visible
+            element = self.driver.find_element(By.XPATH, self.DELIVERY_SEC_XPATH)
+            self.DELIVERY_SEC_XPATH
+            self.driver.execute_script("arguments[0].scrollIntoView();", element)
             # Wait for the ingredient section to be clickable and click it.
             WebDriverWait(self.driver, 10).until(
                 exp.element_to_be_clickable((By.ID, self.PRODUCT_INCI_SECTION_ID))
                 ).click()
             # Wait for the ingredient text to be present and retrieve it
-            ingredients_text = self.get_element_text(By.ID, self.PRODUCT_INCI_ID).text
+            ingredients_text = self.get_element_text(By.XPATH, self.PRODUCT_INCI_XPATH).text
 
             # Split the ingredients text into a list
             return ingredients_text.split(',') if ingredients_text else []
